@@ -62,12 +62,12 @@ public class CardDeque : MonoBehaviour
 
     private void Start()
     {
-        init_Deque();
 
         foreach(GameObject card in cardDeque_Visible.CardObj)
         {
             cards.Add( card.GetComponent<Card>());
         }
+        init_Deque();
     }
 
     void init_Deque()

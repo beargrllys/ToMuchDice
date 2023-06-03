@@ -56,9 +56,9 @@ public class DiceDeque : MonoBehaviour
         return curr_Dice;
     }
 
-    public int Get_Dice()
+    public int Get_Dice(int idx = 0)
     {
-        return Dice_List[0];
+        return Dice_List[idx];
     }
 
     void Update_DiceUI()

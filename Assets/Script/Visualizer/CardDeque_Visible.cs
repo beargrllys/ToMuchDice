@@ -11,9 +11,9 @@ public class CardDeque_Visible : MonoBehaviour
     public Transform Lpoint, Rpoint;
 
     public GameObject[] CardObj = new GameObject[8];
-    List<Vector3> CardPos = new List<Vector3>();
+    public List<Vector3> CardPos = new List<Vector3>();
 
-    private void Start()
+    private void Awake()
     {
         int CaseLen = Mathf.Abs((int)Lpoint.position.x - (int)Rpoint.position.x);
         int offset = CaseLen / MAX_VIS_CARD;
@@ -29,6 +29,7 @@ public class CardDeque_Visible : MonoBehaviour
 
     public void Deque_Update(List<int> Display_Deque)
     {
+        Debug.Log(CardPos.Count);
         for(int i = 0; i < Display_Deque.Count; i++)
         {
             CardObj[i].SetActive(true);

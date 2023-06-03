@@ -10,6 +10,7 @@ public class Card : MonoBehaviour
     public Ally m_ally;
     public Enemy m_enemy;
     public DiceDeque m_dice;
+    public CardDeque m_card;
 
     public TMP_Text TMP_DiceVal;
     public TMP_Text TMP_CardMent;
@@ -18,7 +19,7 @@ public class Card : MonoBehaviour
     public bool isUsed = false;
 
     public int CardIDX;
-    private int m_CardCode;
+    public int m_CardCode;
     private string Card_ment;
 
     private void Start()
@@ -26,6 +27,7 @@ public class Card : MonoBehaviour
         m_ally = GameObject.FindGameObjectWithTag("ALLY").GetComponent<Ally>();
         m_enemy = GameObject.FindGameObjectWithTag("ENEMY").GetComponent<Enemy>();
         m_dice = GameObject.FindGameObjectWithTag("DICE").GetComponent<DiceDeque>();
+        m_card = GameObject.FindGameObjectWithTag("CARD").GetComponent<CardDeque>();
         init_setting(0);
     }
 
@@ -58,112 +60,112 @@ public class Card : MonoBehaviour
         }
     }
 
-    string card_ret(bool is_click, int dice)
+    string card_ret(bool is_click, int dice, bool is_realUse = false)
     {
         string str = "";
 
         switch (m_CardCode)
         {
             case (int)CARD_VAL.ATK1:
-                str = ATK1(is_click, dice);
+                str = ATK1(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.ATK2:
-                ATK2(dice);
+                str = ATK2(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.ATK3:
-                str = ATK3(is_click, dice);
+                str = ATK3(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.ATK4:
-                ATK4(dice);
+                str = ATK4(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.ATK5:
-                ATK5(dice);
+                str = ATK5(is_click, dice, is_realUse);
                 break;
 
 
             case (int)CARD_VAL.ATK6:
-                ATK6(dice);
+                str = ATK6(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.ATK7:
-                ATK7(dice);
+                str = ATK7(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.ATK8:
-                ATK8(dice);
+                str = ATK8(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.ATK9:
-                ATK9(dice);
+                str = ATK9(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.ATK10:
-                ATK10(dice);
+                str = ATK10(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.DPN1:
-                DPN1(dice);
+                str = DPN1(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.DPN2:
-                DPN2(dice);
+                str = DPN2(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.DPN3:
-                DPN3(dice);
+                str = DPN3(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.DPN4:
-                DPN4(dice);
+                str = DPN4(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.DPN5:
-                DPN5(dice);
+                str = DPN5(is_click, dice, is_realUse);
                 break;
 
 
             case (int)CARD_VAL.DPN6:
-                DPN6(dice);
+                str = DPN6(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.DPN7:
-                DPN7(dice);
+                str = DPN7(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.DPN8:
-                DPN8(dice);
+                str = DPN8(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.DPN9:
-                DPN9(dice);
+                str = DPN9(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.DPN10:
-                DPN10(dice);
+                str = DPN10(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.SKIL1:
-                SKIL1(dice);
+                str = SKIL1(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.SKIL2:
-                SKIL2(dice);
+                str = SKIL2(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.SKIL3:
-                SKIL3(dice);
+                str = SKIL3(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.SKIL4:
-                SKIL4(dice);
+                str = SKIL4(is_click, dice, is_realUse);
                 break;
 
             case (int)CARD_VAL.SKIL5:
-                SKIL5(dice);
+                str = SKIL5(is_click, dice, is_realUse);
                 break;
 
             default:
@@ -173,11 +175,15 @@ public class Card : MonoBehaviour
         return str;
     }
 
-    string ATK1(bool read, int dice)
+    string ATK1(bool read, int dice, bool Attack)
     {
-        Debug.Log(read);
         if (read)
         {
+            if (Attack)
+            {
+                m_enemy.Get_Damaged(dice * 2);
+                m_dice.Use_Dice();
+            }
             return string.Format(
                 Config.Instance.CARD_MENT[m_CardCode],
                 (dice * 2).ToString());
@@ -189,14 +195,38 @@ public class Card : MonoBehaviour
                     "N×2");
         }
     }
-    int ATK2(int dice)
-    {
-        return dice * 2;
-    }
-    string ATK3(bool read, int dice)
+    string ATK2(bool read, int dice, bool Attack)
     {
         if (read)
         {
+            if (Attack)
+            {
+                for (int i = 0; i < dice; i++)
+                {
+                    m_enemy.Get_Damaged(2);
+                }
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (dice).ToString());
+        }
+        else
+        {
+            return string.Format(
+                    Config.Instance.CARD_MENT[m_CardCode],
+                    "N");
+        }
+    }
+    string ATK3(bool read, int dice, bool Attack)
+    {
+        if (read)
+        {
+            if (Attack)
+            {
+                m_enemy.Get_Damaged(12 - (dice * 2));
+                m_dice.Use_Dice();
+            }
             return string.Format(
                 Config.Instance.CARD_MENT[m_CardCode],
                 (12 - (dice * 2)).ToString());
@@ -205,98 +235,356 @@ public class Card : MonoBehaviour
                 Config.Instance.CARD_MENT[m_CardCode],
                 "12-N×2");
     }
-    int ATK4(int dice)
+    string ATK4(bool read, int dice, bool Attack)
     {
-        return dice * 2;
+        if (read)
+        {
+            if (Attack)
+            {
+                m_enemy.Get_Damaged(8);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (8).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "8");
     }
-    int ATK5(int dice)
+    string ATK5(bool read, int dice, bool Attack)
     {
-        return dice * 2;
-    }
-
-    int ATK6(int dice)
-    {
-        return dice * 2;
-    }
-    int ATK7(int dice)
-    {
-        return dice * 2;
-    }
-    int ATK8(int dice)
-    {
-        return dice * 2;
-    }
-    int ATK9(int dice)
-    {
-        return dice * 2;
-    }
-    int ATK10(int dice)
-    {
-        return dice * 2;
-    }
-
-
-    int DPN1(int dice)
-    {
-        return dice * 2;
-    }
-    int DPN2(int dice)
-    {
-        return dice * 2;
-    }
-    int DPN3(int dice)
-    {
-        return dice * 2;
-    }
-    int DPN4(int dice)
-    {
-        return dice * 2;
-    }
-    int DPN5(int dice)
-    {
-        return dice * 2;
+        if (read)
+        {
+            if (Attack)
+            {
+                m_enemy.Get_Damaged((-10)* dice);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                ((-10) * dice).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N×(-10)");
     }
 
-    int DPN6(int dice)
+    string ATK6(bool read, int dice, bool Attack)
     {
-        return dice * 2;
+        if (read)
+        {
+            if (Attack)
+            {
+                m_enemy.Get_Damaged((dice + 2) * 2);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                ((dice+2)*2).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "(N+2)×2");
     }
-    int DPN7(int dice)
+    string ATK7(bool read, int dice1, bool Attack)
     {
-        return dice * 2;
+        int dice2 = m_dice.Get_Dice(1);
+        int dice3 = m_dice.Get_Dice(2);
+        //주사위 3개사용
+        if (read)
+        {
+            if (Attack)
+            {
+                m_enemy.Get_Damaged(dice1 + dice2 + dice3);
+                for (int i = 0; i < 3; i++)
+                {
+                    m_dice.Use_Dice();
+                }
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (dice1 + dice2 + dice3).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
     }
-    int DPN8(int dice)
+    string ATK8(bool read, int dice, bool Attack)
     {
-        return dice * 2;
+        int handCard = m_card.m_Display_Deque.Count;
+        if (read)
+        {
+            if (Attack)
+            {
+                m_enemy.Get_Damaged(handCard * dice);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (handCard * dice).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
     }
-    int DPN9(int dice)
+    string ATK9(bool read, int dice, bool Attack)
     {
-        return dice * 2;
+        int handCard = m_card.m_Display_Deque.Count;
+        int dmg = 0;
+        if (handCard == 1)
+        {
+            dmg = dice * 7;
+        }
+        else
+        {
+            dmg = dice;
+        }
+        if (read)
+        {
+            if (Attack)
+            {
+                m_enemy.Get_Damaged(dmg);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                dmg);
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
     }
-    int DPN10(int dice)
+    string ATK10(bool read, int dice, bool Attack)
     {
-        return dice * 2;
+        if (read)
+        {
+            if (Attack)
+            {
+                for (int i = 0; i < dice; i++)
+                {
+                    m_enemy.Get_Damaged(dice);
+                }
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (dice * dice).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
     }
 
 
-    int SKIL1(int dice)
+    string DPN1(bool read, int dice, bool Defense)
     {
-        return dice * 2;
+        if (read)
+        {
+            if (Defense)
+            {
+                m_ally.Get_Shield(dice*2);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (dice * 2).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
     }
-    int SKIL2(int dice)
+    string DPN2(bool read, int dice, bool Defense)
     {
-        return dice * 2;
+        //추후조정
+        if (read)
+        {
+            if (Defense)
+            {
+                m_ally.Get_Shield(dice * 3);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (dice * 3).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
     }
-    int SKIL3(int dice)
+    string DPN3(bool read, int dice, bool Defense)
     {
-        return dice * 2;
+        int def = 10;
+        if (read)
+        {
+            if (Defense)
+            {
+                m_ally.Get_Shield(def);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (def).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
     }
-    int SKIL4(int dice)
+    string DPN4(bool read, int dice, bool Defense)
     {
-        return dice * 2;
+        int def = 0;
+        if(dice % 2 == 1)
+        {
+            def = dice * 3;
+        }
+        else
+        {
+            def = dice;
+        }
+        if (read)
+        {
+            if (Defense)
+            {
+                m_ally.Get_Shield(def);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (def).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
     }
-    int SKIL5(int dice)
+    string DPN5(bool read, int dice, bool Defense)
     {
-        return dice * 2;
+        int def = dice*(-15);
+
+        if (read)
+        {
+            if (Defense)
+            {
+                m_ally.Get_Shield(def);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (def).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
+    }
+
+    string DPN6(bool read, int dice, bool Defense)
+    {
+        if (read)
+        {
+            if (Defense)
+            {
+                m_ally.Get_Shield(dice * 2);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (dice * 2).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
+    }
+    string DPN7(bool read, int dice, bool Defense)
+    {
+        if (read)
+        {
+            if (Defense)
+            {
+                m_ally.Get_Damaged(5);
+                m_ally.Get_Shield(dice * 4);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (dice * 4).ToString(), "5");
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N", "5");
+    }
+    string DPN8(bool read, int dice, bool Defense)
+    {
+        //N Def, 만약 방어 후 방어도가 남아있으면 그 수치 그대로 공격으로 전환 
+        if (read)
+        {
+            if (Defense)
+            {
+                m_ally.Get_Shield(dice * 2);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (dice).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
+    }
+    string DPN9(bool read, int dice, bool Defense)
+    {
+        //(M=사용한 카드 수) N*(8-M) 
+        if (read)
+        {
+            if (Defense)
+            {
+                m_ally.Get_Shield(dice * 2);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (dice * 2).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
+    }
+    string DPN10(bool read, int dice, bool Defense)
+    {
+        //70 Def, M=0일때만 사용 가능, 사용 시 모든 패를 버림 
+        if (read)
+        {
+            if (Defense)
+            {
+                m_ally.Get_Shield(dice * 2);
+                m_dice.Use_Dice();
+            }
+            return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                (dice * 2).ToString());
+        }
+        return string.Format(
+                Config.Instance.CARD_MENT[m_CardCode],
+                "N");
+    }
+
+
+    string SKIL1(bool read, int dice, bool Defense)
+    {
+        return dice.ToString();
+    }
+    string SKIL2(bool read, int dice, bool Defense)
+    {
+        return dice.ToString();
+    }
+    string SKIL3(bool read, int dice, bool Defense)
+    {
+        return dice.ToString();
+    }
+    string SKIL4(bool read, int dice, bool Defense)
+    {
+        return dice.ToString();
+    }
+    string SKIL5(bool read, int dice, bool Defense)
+    {
+        return dice.ToString();
     }
 }
