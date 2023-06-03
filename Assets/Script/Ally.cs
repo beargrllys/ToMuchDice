@@ -12,6 +12,9 @@ public class Ally : MonoBehaviour
     public int now_HP;
     public int now_Shield;
 
+    public Image Character_img;
+    public Sprite Normal_motion, Hit_motion, Damaged_motion;
+
     public Sprite Shield_icon, Shield_break_icon;
     public Image Shield_img;
     public GameObject HP_Bar_img;
@@ -44,6 +47,7 @@ public class Ally : MonoBehaviour
         Update_Bar();
     }
 
+
     public void Get_Shield(int shd)
     {
         if (shd > 0)
@@ -70,7 +74,19 @@ public class Ally : MonoBehaviour
         HP_Bar_img.transform.localScale =
                 new Vector3(now_HP / init_HP, 1, 1);
         HP_txt.text = now_HP.ToString() + "[" + now_Shield.ToString() + "]";
-    } 
+    }
 
+    IEnumerator Damaged_Anime()
+    {
+        Character_img.sprite = Damaged_motion;
+        yield return new WaitForSeconds(0.5f);
+        Character_img.sprite = Normal_motion;
+    }
 
+    IEnumerator Hit_Anime()
+    {
+        Character_img.sprite = Hit_motion;
+        yield return new WaitForSeconds(0.5f);
+        Character_img.sprite = Normal_motion;
+    }
 }

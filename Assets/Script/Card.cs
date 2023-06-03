@@ -201,10 +201,7 @@ public class Card : MonoBehaviour
         {
             if (Attack)
             {
-                for (int i = 0; i < dice; i++)
-                {
-                    m_enemy.Get_Damaged(2);
-                }
+                StartCoroutine(ATK2_action(dice));
                 m_dice.Use_Dice();
             }
             return string.Format(
@@ -218,6 +215,16 @@ public class Card : MonoBehaviour
                     "N");
         }
     }
+
+    IEnumerator ATK2_action(int dice)
+    {
+        for (int i = 0; i < dice; i++)
+        {
+            m_enemy.Get_Damaged(2);
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
+
     string ATK3(bool read, int dice, bool Attack)
     {
         if (read)
