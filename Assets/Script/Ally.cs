@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class Ally : MonoBehaviour
@@ -7,15 +8,14 @@ public class Ally : MonoBehaviour
     public readonly int init_HP = 100;
     public int now_HP;
 
-    // Start is called before the first frame update
-    void Start()
+    /// <summary>
+    /// Ally is get damage to Card number
+    /// </summary>
+    /// <param name="atk"></param>
+    public void Get_Dameged(int atk)
     {
-        now_HP = init_HP;
-    }
+        now_HP -= atk;
+    } 
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

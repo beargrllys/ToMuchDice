@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class DiceDeque : MonoBehaviour
 {
+    const int MAX_DICE = 4;
+
     private int[] Dice_Num = new int[7] { -1, 1, 2, 3, 4, 5, 6 };
-    private List<int> Dice_List = new List<int>();
+    public List<int> Dice_List = new List<int>();
  
     System.Random random = new System.Random();
 
@@ -15,7 +17,7 @@ public class DiceDeque : MonoBehaviour
     int Random_Dice()
     {
         //5%확률로 -1
-        int randomValue = random.Next(0,20);
+        int randomValue = random.Next(0,100);
         if(randomValue == 0) {
             return -1;
         }
@@ -29,7 +31,13 @@ public class DiceDeque : MonoBehaviour
     // // 초기에 3개의 랜덤값을 Dice_List에 추가한다.
     void Start()
     {
-        for (int i = 0; i<3; i++){
+        init_DiceQueue();
+    }
+
+    void init_DiceQueue()
+    {
+        for (int i = 0; i < MAX_DICE; i++)
+        {
             Dice_List.Add(Random_Dice());
         }
     }
@@ -42,6 +50,11 @@ public class DiceDeque : MonoBehaviour
         Dice_List.RemoveAt(0);
         Dice_List.Add(Random_Dice());
         return curr_Dice;
+    }
+
+    public int Get_Dice()
+    {
+        return Dice_List[0];
     }
 
 }
