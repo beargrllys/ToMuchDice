@@ -12,7 +12,7 @@ public class Ally : MonoBehaviour
     /// Ally is get damage to Card number
     /// </summary>
     /// <param name="atk"></param>
-    public void Get_Dameged(int atk)
+    public void Get_Damaged(int atk)
     {
         now_HP -= atk;
     } 
