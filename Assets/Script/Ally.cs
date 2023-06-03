@@ -24,7 +24,6 @@ public class Ally : MonoBehaviour
     private void Start()
     {
         now_HP = init_HP;
-        now_Shield = 10;
         Update_Bar();
     }
 
@@ -43,8 +42,14 @@ public class Ally : MonoBehaviour
             atk -= now_Shield;
             now_Shield = 0;
             now_HP -= atk;
+            StartCoroutine(Damaged_Anime());
         }
         Update_Bar();
+    }
+
+    public void Take_Attack()
+    {
+        StartCoroutine(Hit_Anime());
     }
 
 

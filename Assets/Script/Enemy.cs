@@ -27,13 +27,13 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        ally = GameObject.Find("ALLY").GetComponent<Ally>();
+        ally = GameObject.FindGameObjectWithTag("ALLY").GetComponent<Ally>();
         m_dice = GameObject.FindGameObjectWithTag("DICE").GetComponent<DiceDeque>();
         now_HP = init_HP;
-        now_Shield = max_Shield;
     }
     public void Get_Damaged(int atk)
     {
+        ally.Take_Attack();
         if (now_Shield >= atk)
         {
             now_Shield -= atk;
@@ -54,7 +54,6 @@ public class Enemy : MonoBehaviour
         {
             now_Shield += shd;
             Update_Bar();
-            StartCoroutine(Damaged_Anime());
         }
     }
 

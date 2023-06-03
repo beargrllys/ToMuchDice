@@ -40,13 +40,13 @@ public class Card : MonoBehaviour
         TMP_CardMent.text = str;
     }
 
-    public void click_card(bool is_click)
+    public void click_card(bool is_click, bool is_realUse = false)
     {
         if (is_click)
         {
             DiceVal = m_dice.Get_Dice();
             TMP_DiceVal.text = DiceVal.ToString();
-            string str = card_ret(true, DiceVal);
+            string str = card_ret(true, DiceVal, is_realUse);
             Debug.Log(str);
             Card_ment = str;
             TMP_CardMent.text = str;

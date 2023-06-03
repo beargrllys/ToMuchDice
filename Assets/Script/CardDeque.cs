@@ -112,6 +112,7 @@ public class CardDeque : MonoBehaviour
         m_Display_Deque.RemoveAt((int)card.CardIDX);
         card.isUsed = false;
         cardDeque_Visible.Deque_Update(m_Display_Deque);
+        card.click_card(true, true);
     }
 
 
