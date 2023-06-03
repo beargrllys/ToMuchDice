@@ -316,6 +316,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1358352384}
     m_Modifications:
+    - target: {fileID: 439136895645770423, guid: fe7a003238d16bb4b86704c5612d8e50, type: 3}
+      propertyPath: m_text
+      value: "\uD53C\uD574\uB97C[{0}](N)\uC90D\uB2C8\uB2E4.  \uD328\uC758 \uB9C8\uC9C0\uB9C9
+        \uCE74\uB4DC\uC77C\uB54C :7\uBC30\uC758 \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
+      objectReference: {fileID: 0}
     - target: {fileID: 3164254991198417498, guid: fe7a003238d16bb4b86704c5612d8e50, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -801,8 +806,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CARD_MENT:
+  - "\uD53C\uD574\uB97C [{0}](N\xD72)\uC90D\uB2C8\uB2E4."
+  - "\uD53C\uD574\uB97C 2\uB9CC\uD07C [{0}]\uBC88 \uC90D\uB2C8\uB2E4."
+  - "\uD53C\uD574\uB97C[{0}](12-N\xD72)\uC90D\uB2C8\uB2E4."
+  - "\uD53C\uD574\uB97C[8]\uC90D\uB2C8\uB2E4. \uC774 \uCE74\uB4DC\uB294 \uC8FC\uC0AC\uC704
+    \uC601\uD5A5\uC744 \uBB34\uC2DC\uD569\uB2C8\uB2E4."
+  - "\uD53C\uD574\uB97C[{0}](N\xD7-10)\uC90D\uB2C8\uB2E4."
+  - "\uD53C\uD574\uB97C[{0}]((N+2)\xD72)\uC90D\uB2C8\uB2E4. \uC8FC\uC0AC\uC704 \uD558\uB098\uB97C
+    \uC18C\uBA78\uD569\uB2C8\uB2E4."
+  - "\uC8FC\uC0AC\uC704 3\uAC1C\uB97C \uC18C\uBAA8\uD558\uACE0, \uADF8 \uD569\uB9CC\uD07C
+    \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4.[{0}]"
+  - "\uC190\uC5D0 \uB4E0 \uCE74\uB4DC\uC218\xD7N\uC758 \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4[{0}]"
+  - "\uD53C\uD574\uB97C[{0}](N)\uC90D\uB2C8\uB2E4. \uD328\uC758 \uC720\uC77C\uD55C
+    \uCE74\uB4DC\uC77C\uB54C: N\xD77"
+  - "\uD53C\uD574\uB97C[{0}](N)\uB9CC\uD07C [{0}](N)\uBC88 \uC90D\uB2C8\uB2E4."
+  - "\uBC29\uC5B4\uB825\uC744 [{0}](N\xD72)\uC5BB\uC2B5\uB2C8\uB2E4."
+  - "\uBC29\uC5B4\uB825\uC744 [{0}](N\xD73)\uC5BB\uC2B5\uB2C8\uB2E4. \uCE74\uB4DC\uB97C
+    \uD55C\uC7A5 \uB4DC\uB85C\uC6B0 \uD569\uB2C8\uB2E4."
+  - "\uBC29\uC5B4\uB825\uC744 [10] \uC5BB\uC2B5\uB2C8\uB2E4. \uC8FC\uC0AC\uC704\uC758
+    \uC601\uD5A5\uC744 \uBB34\uC2DC\uD569\uB2C8\uB2E4."
+  - "\uBC29\uC5B4\uB825\uC744 [{0}] \uC5BB\uC2B5\uB2C8\uB2E4. N\uC774 \uD640\uC218:
+    (N\xD73) N\uC774 \uC9DD\uC218:(N)"
+  - "\uBC29\uC5B4\uB825\uC744 [{0}] (N \xD7 -15) \uC5BB\uC2B5\uB2C8\uB2E4."
+  - "\uC8FC\uC0AC\uC704 2\uAC1C\uB97C \uC0AC\uC6A9\uD569\uB2C8\uB2E4: N\xD72\uC758
+    \uBC29\uC5B4\uB3C4\uB97C \uD68D\uB4DD \uCD1D[{0}]"
+  - "\uCCB4\uB825 5 \uC18C\uBAA8, N\xD74[{N}]"
+  - "\uBC29\uC5B4\uB825\uC744 [{0}](N) \uC5BB\uC2B5\uB2C8\uB2E4. \uC0C1\uB300 \uD134
+    \uC885\uB8CC\uC2DC \uB0A8\uC544\uC788\uB294 \uBC29\uC5B4\uB825\uB9CC\uD07C\uC758
+    \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
+  - "[{0}](N\xD7(8-N))\uB9CC\uD07C \uACF5\uACA9"
   - "[{0}]\uB9CC\uD07C \uACF5\uACA9"
-  - "2\uB9CC\uD07C \uACF5\uACA9 [{0}]\uBC88 \uBC18\uBCF5"
+  - "[{0}]\uB9CC\uD07C \uACF5\uACA9"
+  - "[{0}]\uB9CC\uD07C \uACF5\uACA9"
+  - "[{0}]\uB9CC\uD07C \uACF5\uACA9"
   - "[{0}]\uB9CC\uD07C \uACF5\uACA9"
   - "[{0}]\uB9CC\uD07C \uACF5\uACA9"
 --- !u!4 &329934134
