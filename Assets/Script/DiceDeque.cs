@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DiceDeque : MonoBehaviour
 {
@@ -10,8 +11,11 @@ public class DiceDeque : MonoBehaviour
 
     private int[] Dice_Num = new int[7] { -1, 1, 2, 3, 4, 5, 6 };
     public List<int> Dice_List = new List<int>();
-    public List<TMP_Text> Dice_UI= new List<TMP_Text>();
- 
+    //public List<TMP_Text> Dice_UI= new List<TMP_Text>();
+
+    public Image[] Dice_UI = new Image[3];
+    public Sprite[] Dice_Sprite = new Sprite[15];
+
     System.Random random = new System.Random();
 
     // Dice_Num 배열 값 중 하나를 랜덤하게 반환한다.
@@ -65,7 +69,7 @@ public class DiceDeque : MonoBehaviour
     {
         for(int i = 0; i < MAX_DICE; i++)
         {
-            Dice_UI[i].text = Dice_List[i].ToString();
+            Dice_UI[i].sprite = Dice_Sprite[Dice_List[i]+7];
         }
     }
 
