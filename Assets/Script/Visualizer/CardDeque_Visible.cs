@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.UIElements;
 using UnityEngine;
 
 public class CardDeque_Visible : MonoBehaviour
@@ -29,7 +27,6 @@ public class CardDeque_Visible : MonoBehaviour
 
     public void Deque_Update(List<int> Display_Deque)
     {
-        Debug.Log(CardPos.Count);
         for(int i = 0; i < Display_Deque.Count; i++)
         {
             CardObj[i].SetActive(true);

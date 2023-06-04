@@ -73,4 +73,27 @@ public class DiceDeque : MonoBehaviour
         }
     }
 
+    public void Change_DiceVal(int val) {
+        Dice_List[0] += val;
+        Update_DiceUI();
+    }
+
+    public void ChangeAll_DiceVal()
+    {
+        for (int i = 0; i < MAX_DICE; i++)
+        {
+            Dice_List[i] = Random_Dice();
+        }
+        Update_DiceUI();
+    }
+
+    public void Reverse_AllDiceVal()
+    {
+        for (int i = 0; i < MAX_DICE; i++)
+        {
+            Dice_List[i] = Dice_List[i]*(-1);
+        }
+        Update_DiceUI();
+    }
+
 }

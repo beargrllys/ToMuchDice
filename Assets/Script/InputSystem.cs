@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InputSystem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class InputSystem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private Card card;
 
@@ -23,10 +23,26 @@ public class InputSystem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         card = GetComponent<Card>();
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (card != null)
+        {
+            card.click_card(true);
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (card != null)
+        {
+            card.click_card(false);
+        }
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
+        Config.Instance.Play_Sound_Effect((int)Config.SOUNF_EFFECT.CHOICE);
         pre_position = rectTr.anchoredPosition;
-        card.click_card(true);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -39,7 +55,6 @@ public class InputSystem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     {
         if (is_DropArea())
         {
-            Debug.Log("Card is Used");
             card.isUsed = true;
         }
         else
@@ -66,5 +81,10 @@ public class InputSystem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             return true;
         }
         return false;
+    }
+
+    public void Get_Back() {
+        rectTr.localPosition = pre_position;
+        card.click_card(false);
     }
 }

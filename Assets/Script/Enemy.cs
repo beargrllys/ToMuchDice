@@ -8,7 +8,8 @@ public class Enemy : MonoBehaviour
 {
     public Ally ally;
     public DiceDeque m_dice;
-
+    public TurnManager turnManager;
+    public CardDeque cardDeque;
     public int init_HP;
     public int now_HP;
     public int max_Shield;
@@ -22,18 +23,27 @@ public class Enemy : MonoBehaviour
     public GameObject HP_Bar_img;
     public GameObject Shield_Bar_img;
     public TMP_Text HP_txt;
-    public TMP_Text txt_UI;
+    public TMP_Text Shield_txt;
+    public TMP_Text Attack_Damage_txt;
+    public GameObject ExplainBoard;
+    public TMP_Text ExplainTxt;
 
 
     private void Start()
     {
         ally = GameObject.FindGameObjectWithTag("ALLY").GetComponent<Ally>();
         m_dice = GameObject.FindGameObjectWithTag("DICE").GetComponent<DiceDeque>();
+        turnManager = GameObject.FindGameObjectWithTag("TURN").GetComponent<TurnManager>();
+        cardDeque = GameObject.FindGameObjectWithTag("CARD").GetComponent<CardDeque>();
+        init_HP = Config.Instance.MONSTER_HP[BattleManage.Instance.battleTrun];
         now_HP = init_HP;
     }
     public void Get_Damaged(int atk)
     {
-        ally.Take_Attack();
+        if(atk < 0)
+        {
+            ally.Get_Damaged(-1 * atk);
+        }
         if (now_Shield >= atk)
         {
             now_Shield -= atk;
@@ -43,24 +53,40 @@ public class Enemy : MonoBehaviour
             atk -= now_Shield;
             now_Shield = 0;
             now_HP -= atk;
+            Config.Instance.Play_Sound_Effect((int)Config.SOUNF_EFFECT.ENM_DPS);
             StartCoroutine(Damaged_Anime());
+        }
+        if (now_HP <= 0)
+        {
+            now_HP = 0;
+            turnManager.BattleEnd(true);
+            return;
         }
         Update_Bar();
     }
 
     public void Get_Shield(int shd)
     {
-        if (shd > 0)
+        if (shd >= 0)
         {
-            now_Shield += shd;
+            now_Shield = shd;
             Update_Bar();
         }
     }
 
-    public void Take_Attack(int now_dealing)
+    public virtual void Ready_Turn()
     {
-        StartCoroutine(Hit_Anime());
-        ally.Get_Damaged(now_dealing);
+        return;
+    }
+
+    public virtual void Take_Attack()
+    {
+        return;
+    }
+
+    public virtual void Reset_Turn()
+    {
+        return;
     }
 
     public void Update_Bar()
@@ -78,18 +104,19 @@ public class Enemy : MonoBehaviour
                 new Vector3(0, 1, 1);
         }
         HP_Bar_img.transform.localScale =
-                new Vector3(now_HP / init_HP, 1, 1);
-        HP_txt.text = now_HP.ToString() + "[" + now_Shield.ToString() + "]";
+                new Vector3((float)now_HP / init_HP, 1, 1);
+        HP_txt.text = now_HP.ToString();
+        Shield_txt.text = now_Shield.ToString();
     }
 
-    IEnumerator Damaged_Anime()
+    public IEnumerator Damaged_Anime()
     {
         Character_img.sprite = Damaged_motion;
         yield return new WaitForSeconds(0.5f);
         Character_img.sprite = Normal_motion;
     }
 
-    IEnumerator Hit_Anime()
+    public IEnumerator Hit_Anime()
     {
         Character_img.sprite = Hit_motion;
         yield return new WaitForSeconds(0.5f);

@@ -11,19 +11,28 @@ public class Ally : MonoBehaviour
     public int max_Shield = 100;
     public int now_HP;
     public int now_Shield;
+    public int ally_dealing;
+
+    public Enemy m_enemy;
+    public TurnManager turnManager;
 
     public Image Character_img;
     public Sprite Normal_motion, Hit_motion, Damaged_motion;
-
-    public Sprite Shield_icon, Shield_break_icon;
     public Image Shield_img;
+    public Sprite Shield_icon, Shield_break_icon;
     public GameObject HP_Bar_img;
     public GameObject Shield_Bar_img;
     public TMP_Text HP_txt;
+    public TMP_Text Shield_txt;
+    public TMP_Text Dealing_txt;
+
+    //--------------------특수 상황 변수------------
+    public bool DPN8_flag; // 방어 후 방어도가 남아있으면 그 수치 그대로 공격으로 전환 
 
     private void Start()
     {
-        now_HP = init_HP;
+        m_enemy = GameObject.FindGameObjectWithTag("ENEMY").GetComponent<Enemy>();
+        now_HP = BattleManage.Instance.savedHP + (int)((float)BattleManage.Instance.savedHP * BattleManage.Instance.healWithStage);
         Update_Bar();
     }
 
@@ -35,31 +44,66 @@ public class Ally : MonoBehaviour
     {
         if (now_Shield >= atk)
         {
-            now_Shield -= atk;
+            if (DPN8_flag && now_Shield != atk)
+            {
+                m_enemy.Get_Damaged(now_Shield - atk);
+                DPN8_flag = false;
+            }
+            now_Shield = 0;
         }
         else if (now_Shield < atk)
         {
             atk -= now_Shield;
             now_Shield = 0;
             now_HP -= atk;
+            Config.Instance.Play_Sound_Effect((int)Config.SOUNF_EFFECT.ENM_ATK);
+            StartCoroutine(Damaged_Anime());
+        }
+        if(now_HP <= 0)
+        {
+            now_HP = 0;
+            turnManager.BattleEnd(false);
+            return;
+        }
+        Update_Bar();
+    }
+
+    public void Accamulate_Deal(int deal)
+    {
+        ally_dealing += deal;
+        Dealing_txt.text = ally_dealing.ToString();
+    }
+
+    public void Take_Attack()
+    {
+        if (ally_dealing > 0)
+        {
+            m_enemy.Get_Damaged(ally_dealing);
+            StartCoroutine(Hit_Anime());
+        }
+        else if(ally_dealing < 0)
+        {
+            Get_Damaged((-1) * ally_dealing);
             StartCoroutine(Damaged_Anime());
         }
         Update_Bar();
     }
 
-    public void Take_Attack()
-    {
-        StartCoroutine(Hit_Anime());
-    }
-
 
     public void Get_Shield(int shd)
     {
-        if (shd > 0)
+        if (shd >= 0)
         {
             now_Shield += shd;
             Update_Bar();
         }
+    }
+
+    public void Ready_Turn()
+    {
+        ally_dealing = 0;
+        Get_Shield(0);
+        Dealing_txt.text = ally_dealing.ToString();
     }
 
     public void Update_Bar()
@@ -77,8 +121,14 @@ public class Ally : MonoBehaviour
                 new Vector3(0, 1, 1);
         }
         HP_Bar_img.transform.localScale =
-                new Vector3(now_HP / init_HP, 1, 1);
-        HP_txt.text = now_HP.ToString() + "[" + now_Shield.ToString() + "]";
+                new Vector3((float)now_HP / init_HP, 1, 1);
+        HP_txt.text = now_HP.ToString();
+        Shield_txt.text = now_Shield.ToString();
+    }
+
+    public int Get_UsedCard_cnt()
+    {
+        return turnManager.Used_Card;
     }
 
     IEnumerator Damaged_Anime()

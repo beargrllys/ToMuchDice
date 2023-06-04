@@ -77,39 +77,19 @@ public class Config : MonoBehaviour
         DEFENSE
     }
 
-    public List<string> CARD_MENT = new List<string>()
+    public enum SOUNF_EFFECT
     {
-        "[{0}]만큼 공격",
-        "2만큼 공격 [{0}]번 반복",
-        "[{0}]만큼 공격",
-        "[{0}]만큼 공격",
-        "[{0}]만큼 공격",
+        CHOICE = 0,
+        VICTORY,
+        DEFEAT,
+        NEWCARD,
+        ENM_ATK,
+        ENM_DPS,
+    }
 
-        "[{0}]만큼 공격",
-        "2만큼 공격 [{0}]번 반복",
-        "[{0}]만큼 공격",
-        "[{0}]만큼 공격",
-        "[{0}]만큼 공격",
+    public List<string> CARD_TITLE = new List<string>();
 
-        "[{0}]만큼 방어",
-        "2만큼 방어 [{0}]번 반복",
-        "[{0}]만큼 방어",
-        "[{0}]만큼 방어",
-        "[{0}]만큼 방어",
-
-        "[{0}]만큼 방어",
-        "2만큼 방어 [{0}]번 반복",
-        "[{0}]만큼 방어",
-        "[{0}]만큼 방어",
-        "[{0}]만큼 방어",
-
-
-        "[{0}]만큼 스킬",
-        "2만큼 스킬 [{0}]번 반복",
-        "[{0}]만큼 스킬",
-        "[{0}]만큼 스킬",
-        "[{0}]만큼 스킬",
-    };
+    public List<string> CARD_MENT = new List<string>();
 
     public Dictionary<int, int> CARD_COUNT = new Dictionary<int, int>()
     {
@@ -143,4 +123,18 @@ public class Config : MonoBehaviour
         {(int)CARD_VAL.SKIL4, 5 },
         {(int)CARD_VAL.SKIL5, 5 }
     };
+
+    public List<int> MONSTER_HP = new List<int>();
+    public AudioSource audioSource;
+    public List<AudioClip> SOUNDEFFECT = new List<AudioClip>();
+
+    public void Play_Sound_Effect(int effectNum)
+    {
+        if (effectNum == (int)SOUNF_EFFECT.ENM_ATK
+            || effectNum == (int)SOUNF_EFFECT.ENM_DPS)
+        {
+            effectNum += (BattleManage.Instance.battleTrun * 2);
+        }
+        audioSource.PlayOneShot(SOUNDEFFECT[effectNum]);
+    }
 }

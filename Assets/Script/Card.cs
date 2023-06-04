@@ -4,16 +4,20 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 using static Config;
+using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
     public Ally m_ally;
-    public Enemy m_enemy;
     public DiceDeque m_dice;
     public CardDeque m_card;
+    public InputSystem inputSystem;
 
     public TMP_Text TMP_DiceVal;
     public TMP_Text TMP_CardMent;
+
+    public Sprite[] CardCase;
+    public Image CardCaseImg;
 
     public int DiceVal;
     public bool isUsed = false;
@@ -22,10 +26,12 @@ public class Card : MonoBehaviour
     public int m_CardCode;
     private string Card_ment;
 
+    //---------------------------특수기믹-------------------
+    public bool DPN10_flag;
+
     private void Start()
     {
         m_ally = GameObject.FindGameObjectWithTag("ALLY").GetComponent<Ally>();
-        m_enemy = GameObject.FindGameObjectWithTag("ENEMY").GetComponent<Enemy>();
         m_dice = GameObject.FindGameObjectWithTag("DICE").GetComponent<DiceDeque>();
         m_card = GameObject.FindGameObjectWithTag("CARD").GetComponent<CardDeque>();
         init_setting(0);
@@ -35,9 +41,27 @@ public class Card : MonoBehaviour
     {
         isUsed = false;
         m_CardCode = card_Code;
+        colorSetting();
         string str = card_ret(false, DiceVal);
-        Card_ment = str;
-        TMP_CardMent.text = str;
+        TMP_DiceVal.text = "?";
+        Card_ment = Config.Instance.CARD_TITLE[m_CardCode];
+        TMP_CardMent.text = Config.Instance.CARD_TITLE[m_CardCode];
+    }
+
+    public void colorSetting()
+    {
+        if(0 <= m_CardCode && 9 >= m_CardCode)
+        {
+            CardCaseImg.sprite = CardCase[0];
+        }
+        else if (10 <= m_CardCode && 19 >= m_CardCode)
+        {
+            CardCaseImg.sprite = CardCase[1];
+        }
+        else if (20 <= m_CardCode && 24 >= m_CardCode)
+        {
+            CardCaseImg.sprite = CardCase[2];
+        }
     }
 
     public void click_card(bool is_click, bool is_realUse = false)
@@ -45,18 +69,17 @@ public class Card : MonoBehaviour
         if (is_click)
         {
             DiceVal = m_dice.Get_Dice();
-            TMP_DiceVal.text = DiceVal.ToString();
-            string str = card_ret(true, DiceVal, is_realUse);
-            Debug.Log(str);
-            Card_ment = str;
-            TMP_CardMent.text = str;
+            string Val = card_ret(true, DiceVal, is_realUse);
+            TMP_DiceVal.text = Val;
+            Card_ment = Config.Instance.CARD_MENT[m_CardCode];
+            TMP_CardMent.text = Config.Instance.CARD_MENT[m_CardCode];
         }
         else
         {
             TMP_DiceVal.text = "?";
             string str = card_ret(false, DiceVal);
-            Card_ment = str;
-            TMP_CardMent.text = str;
+            Card_ment = Config.Instance.CARD_TITLE[m_CardCode];
+            TMP_CardMent.text = Config.Instance.CARD_TITLE[m_CardCode];
         }
     }
 
@@ -177,26 +200,21 @@ public class Card : MonoBehaviour
 
     string ATK1(bool read, int dice, bool Attack)
     {
+        int ret = dice * 2;
+        ret += m_card.SKIL2_power;
         if (read)
         {
             if (Attack)
             {
-                m_enemy.Get_Damaged(dice * 2);
+                m_ally.Accamulate_Deal(ret);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (dice * 2).ToString());
         }
-        else
-        {
-            return string.Format(
-                    Config.Instance.CARD_MENT[m_CardCode],
-                    "N×2");
-        }
+        return (ret).ToString();
     }
     string ATK2(bool read, int dice, bool Attack)
     {
+        int ret = dice * (2+ m_card.SKIL2_power);
         if (read)
         {
             if (Attack)
@@ -204,43 +222,31 @@ public class Card : MonoBehaviour
                 StartCoroutine(ATK2_action(dice));
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (dice).ToString());
         }
-        else
-        {
-            return string.Format(
-                    Config.Instance.CARD_MENT[m_CardCode],
-                    "N");
-        }
+        return (ret).ToString();
     }
 
     IEnumerator ATK2_action(int dice)
     {
         for (int i = 0; i < dice; i++)
         {
-            m_enemy.Get_Damaged(2);
-            yield return new WaitForSeconds(0.2f);
+            m_ally.Accamulate_Deal(2+m_card.SKIL2_power);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
     string ATK3(bool read, int dice, bool Attack)
     {
+        int ret = (12 - (dice * 2) + m_card.SKIL2_power);
         if (read)
         {
             if (Attack)
             {
-                m_enemy.Get_Damaged(12 - (dice * 2));
+                m_ally.Accamulate_Deal(ret);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (12 - (dice * 2)).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "12-N×2");
+        return (ret).ToString();
     }
     string ATK4(bool read, int dice, bool Attack)
     {
@@ -248,97 +254,77 @@ public class Card : MonoBehaviour
         {
             if (Attack)
             {
-                m_enemy.Get_Damaged(8);
+                m_ally.Accamulate_Deal(8 + m_card.SKIL2_power);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (8).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "8");
+        return (8 + m_card.SKIL2_power).ToString();
     }
     string ATK5(bool read, int dice, bool Attack)
     {
+        int ret = (((-10) * dice) + m_card.SKIL2_power);
         if (read)
         {
             if (Attack)
             {
-                m_enemy.Get_Damaged((-10)* dice);
+                m_ally.Accamulate_Deal(ret);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                ((-10) * dice).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N×(-10)");
+        return (ret).ToString();
     }
 
     string ATK6(bool read, int dice, bool Attack)
     {
+        int ret = (((dice + 2) * 2) + m_card.SKIL2_power);
         if (read)
         {
             if (Attack)
             {
-                m_enemy.Get_Damaged((dice + 2) * 2);
+                m_ally.Accamulate_Deal(ret);
+                m_dice.Use_Dice();
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                ((dice+2)*2).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "(N+2)×2");
+        return (ret).ToString();
     }
     string ATK7(bool read, int dice1, bool Attack)
     {
         int dice2 = m_dice.Get_Dice(1);
         int dice3 = m_dice.Get_Dice(2);
+        int ret = ((dice1 + dice2 + dice3) + m_card.SKIL2_power);
         //주사위 3개사용
         if (read)
         {
             if (Attack)
             {
-                m_enemy.Get_Damaged(dice1 + dice2 + dice3);
+                m_ally.Accamulate_Deal(ret);
                 for (int i = 0; i < 3; i++)
                 {
                     m_dice.Use_Dice();
                 }
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (dice1 + dice2 + dice3).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (ret).ToString();
     }
     string ATK8(bool read, int dice, bool Attack)
     {
         int handCard = m_card.m_Display_Deque.Count;
+        int ret = ((handCard * dice) + m_card.SKIL2_power);
         if (read)
         {
             if (Attack)
             {
-                m_enemy.Get_Damaged(handCard * dice);
+                m_ally.Accamulate_Deal(ret);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (handCard * dice).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (ret).ToString();
     }
     string ATK9(bool read, int dice, bool Attack)
     {
         int handCard = m_card.m_Display_Deque.Count;
-        int dmg = 0;
+        int dmg;
         if (handCard == 1)
         {
             dmg = dice * 7;
@@ -351,16 +337,11 @@ public class Card : MonoBehaviour
         {
             if (Attack)
             {
-                m_enemy.Get_Damaged(dmg);
+                m_ally.Accamulate_Deal(dmg + m_card.SKIL2_power);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                dmg);
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (dmg + m_card.SKIL2_power).ToString();
     }
     string ATK10(bool read, int dice, bool Attack)
     {
@@ -368,19 +349,19 @@ public class Card : MonoBehaviour
         {
             if (Attack)
             {
-                for (int i = 0; i < dice; i++)
-                {
-                    m_enemy.Get_Damaged(dice);
-                }
+                StartCoroutine(ATK10_action(dice));
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (dice * dice).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (dice * (dice + m_card.SKIL2_power)).ToString();
+    }
+    IEnumerator ATK10_action(int dice)
+    {
+        for (int i = 0; i < dice; i++)
+        {
+            m_ally.Accamulate_Deal(dice + m_card.SKIL2_power);
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
 
@@ -393,13 +374,8 @@ public class Card : MonoBehaviour
                 m_ally.Get_Shield(dice*2);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (dice * 2).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (dice * 2).ToString();
     }
     string DPN2(bool read, int dice, bool Defense)
     {
@@ -409,15 +385,11 @@ public class Card : MonoBehaviour
             if (Defense)
             {
                 m_ally.Get_Shield(dice * 3);
+                m_card.Drop_Last_Card();
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (dice * 3).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (dice * 3).ToString();
     }
     string DPN3(bool read, int dice, bool Defense)
     {
@@ -429,17 +401,12 @@ public class Card : MonoBehaviour
                 m_ally.Get_Shield(def);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (def).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (def).ToString();
     }
     string DPN4(bool read, int dice, bool Defense)
     {
-        int def = 0;
+        int def;
         if(dice % 2 == 1)
         {
             def = dice * 3;
@@ -455,13 +422,8 @@ public class Card : MonoBehaviour
                 m_ally.Get_Shield(def);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (def).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (def).ToString();
     }
     string DPN5(bool read, int dice, bool Defense)
     {
@@ -474,13 +436,8 @@ public class Card : MonoBehaviour
                 m_ally.Get_Shield(def);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (def).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (def).ToString();
     }
 
     string DPN6(bool read, int dice, bool Defense)
@@ -489,16 +446,20 @@ public class Card : MonoBehaviour
         {
             if (Defense)
             {
-                m_ally.Get_Shield(dice * 2);
+                StartCoroutine(DPN6_action(dice));
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (dice * 2).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (dice*dice).ToString();
+    }
+
+    IEnumerator DPN6_action(int dice)
+    {
+        for (int i = 0; i < dice; i++)
+        {
+            m_ally.Get_Shield(dice * 2);
+            yield return new WaitForSeconds(0.5f);
+        }
     }
     string DPN7(bool read, int dice, bool Defense)
     {
@@ -506,17 +467,18 @@ public class Card : MonoBehaviour
         {
             if (Defense)
             {
-                m_ally.Get_Damaged(5);
-                m_ally.Get_Shield(dice * 4);
+                StartCoroutine (DPN7_action(dice));
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (dice * 4).ToString(), "5");
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N", "5");
+        return (dice * 4).ToString();
+    }
+    IEnumerator DPN7_action(int dice)
+    {
+        m_ally.Get_Damaged(5);
+        yield return new WaitForSeconds(0.5f);
+        m_ally.Get_Shield(dice * 4);
+        yield return new WaitForSeconds(0.5f);
     }
     string DPN8(bool read, int dice, bool Defense)
     {
@@ -525,34 +487,24 @@ public class Card : MonoBehaviour
         {
             if (Defense)
             {
-                m_ally.Get_Shield(dice * 2);
+                m_ally.DPN8_flag = true;
+                m_ally.Get_Shield(dice);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (dice).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (dice).ToString();
     }
     string DPN9(bool read, int dice, bool Defense)
     {
-        //(M=사용한 카드 수) N*(8-M) 
         if (read)
         {
             if (Defense)
             {
-                m_ally.Get_Shield(dice * 2);
+                m_ally.Get_Shield(dice);
                 m_dice.Use_Dice();
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (dice * 2).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (dice).ToString();
     }
     string DPN10(bool read, int dice, bool Defense)
     {
@@ -561,37 +513,80 @@ public class Card : MonoBehaviour
         {
             if (Defense)
             {
-                m_ally.Get_Shield(dice * 2);
-                m_dice.Use_Dice();
+                if(m_ally.Get_UsedCard_cnt() == 0)
+                {
+                    m_ally.Get_Shield(70);
+                    m_card.Drop_All_Card(CardIDX);
+                    m_dice.Use_Dice();
+                }
+                else
+                {
+                    DPN10_flag = true;
+                    inputSystem.Get_Back();
+                }
             }
-            return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                (dice * 2).ToString());
         }
-        return string.Format(
-                Config.Instance.CARD_MENT[m_CardCode],
-                "N");
+        return (dice).ToString();
     }
 
 
     string SKIL1(bool read, int dice, bool Defense)
     {
-        return dice.ToString();
+        if (read)
+        {
+            if (Defense)
+            {
+                int cnt = m_card.getDisplayCnt();
+                m_card.Drop_All_Card(CardIDX);
+                m_card.Draw_Card(cnt);
+                m_card.ChangeAllDice();
+            }
+        }
+        return "!";
     }
     string SKIL2(bool read, int dice, bool Defense)
     {
-        return dice.ToString();
+        if (read)
+        {
+            if (Defense)
+            {
+                m_card.SKIL2_power = 2;
+            }
+        }
+        return "!";
     }
     string SKIL3(bool read, int dice, bool Defense)
     {
-        return dice.ToString();
+        if (read)
+        {
+            if (Defense)
+            {
+                m_card.NextDiceInc();
+            }
+        }
+        return "!";
     }
     string SKIL4(bool read, int dice, bool Defense)
     {
-        return dice.ToString();
+        if (read)
+        {
+            if (Defense)
+            {
+                m_card.Drop_Last_Card();
+                m_card.Draw_Card(2);
+            }
+        }
+        return "!";
     }
     string SKIL5(bool read, int dice, bool Defense)
     {
-        return dice.ToString();
+        if (read)
+        {
+            if (Defense)
+            {
+                m_card.NextDiceRed();
+            }
+        }
+        return "!";
     }
 }

@@ -10,13 +10,13 @@ public class Enemy1 : Enemy
 
     public int now_dealing ;
     string dice_expain = "주사위[N]:{0}";
-    string attack_expain = "\n{0}만큼 공격";
-    string defense_expain = "\n{0}만큼 방어";
+    string attack_expain = "\n{0}[{1}]만큼 공격";
+    string defense_expain = "\n{0}[{1}]만큼 방어";
+    public string full_expain;
 
     public void atk_pattern()
     {
-        pattern_now= Random.Range(0, pattern_cnt-1);
-
+        pattern_now= Random.Range(0, pattern_cnt);
         switch(pattern_now)
         {
             case 0:
@@ -36,22 +36,50 @@ public class Enemy1 : Enemy
         }
     }
 
+    public override void Ready_Turn()
+    {
+        now_dealing = 0;
+        Get_Shield(0);
+        atk_pattern();
+        ExplainTxt.text = full_expain;
+        Attack_Damage_txt.text = now_dealing.ToString();
+        return;
+    }
+
+    public override void Take_Attack()
+    {
+        if(now_dealing < 0)
+        {
+            Get_Damaged(-1 * now_dealing);
+            StartCoroutine(Damaged_Anime());
+            return;
+        }
+        StartCoroutine(Hit_Anime());
+        ally.Get_Damaged(now_dealing);
+        now_dealing = 0;
+        now_Shield = 0;
+        Update_Bar();
+    }
+
     public void pattern1()
     {
         int N = m_dice.Use_Dice();
         now_dealing = 5 + (N * 4);
-        txt_UI.text = "";
-        txt_UI.text += string.Format(dice_expain, N);
-        txt_UI.text += string.Format(attack_expain, "5+N×4");
+        now_Shield = 0;
+        Get_Shield(now_Shield);
+        full_expain = "";
+        full_expain += string.Format(dice_expain, N);
+        full_expain += string.Format(attack_expain, "5+N×4",now_dealing);
     }
 
     public void pattern2()
     {
         int N = m_dice.Use_Dice();
         now_Shield = 3 + (N * 3);
-        txt_UI.text = "";
-        txt_UI.text += string.Format(dice_expain, N);
-        txt_UI.text += string.Format(defense_expain, "3+N×3");
+        Get_Shield(now_Shield);
+        full_expain = "";
+        full_expain += string.Format(dice_expain, N);
+        full_expain += string.Format(defense_expain, "3+N×3", now_Shield);
     }
 
     public void pattern3()
@@ -59,9 +87,10 @@ public class Enemy1 : Enemy
         int N = m_dice.Use_Dice();
         now_dealing = 5 + (N * 3);
         now_Shield = N * 3;
-        txt_UI.text = "";
-        txt_UI.text += string.Format(dice_expain, N);
-        txt_UI.text += string.Format(attack_expain, "5+N×3");
-        txt_UI.text += string.Format(defense_expain, "N×3");
+        Get_Shield(now_Shield);
+        full_expain = "";
+        full_expain += string.Format(dice_expain, N);
+        full_expain += string.Format(attack_expain, "5+N×3", now_dealing);
+        full_expain += string.Format(defense_expain, "N×3", now_Shield);
     }
 }

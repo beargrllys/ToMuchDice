@@ -4,16 +4,38 @@ using UnityEngine;
 
 public class BattleManage : MonoBehaviour
 {
-    public int battleTrun;
-    // Start is called before the first frame update
-    void Start()
+    private static BattleManage Battleinstance = null;
+
+    void Awake()
     {
-        
+        if (null == Battleinstance)
+        {
+            Battleinstance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+    public static BattleManage Instance
+    {
+        get
+        {
+            if (null == Battleinstance)
+            {
+                return null;
+            }
+            return Battleinstance;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public TurnManager turnManager;
+    public int battleTrun;
+    public int[] Add_newCard = new int[25];
+
+    public int savedHP = 100;
+    public float healWithStage = 0.1f;
+
+
 }
