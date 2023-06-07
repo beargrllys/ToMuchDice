@@ -13,6 +13,7 @@ public class CardDeque : MonoBehaviour
 
     public const int MAX_DISPLAY_CARD = 8;
 
+    //전체 카드 덱 개수
     public Dictionary<int, int> DEQUE_PULL = new Dictionary<int, int>()
     {
         {(int)Config.CARD_VAL.ATK1, 5 },
@@ -46,7 +47,7 @@ public class CardDeque : MonoBehaviour
         {(int)Config.CARD_VAL.SKIL5, 0 }
     };
 
-    //0~4�� ���õǰ� �ִ� 
+    //0~4는 전시되고 있는 
     public List<int> m_Ready_Deque = new List<int>();
     public List<int> m_Display_Deque = new List<int>();
     public int getDisplayCnt()
@@ -57,10 +58,10 @@ public class CardDeque : MonoBehaviour
 
     public List<Card> cards = new List<Card>();
 
-    //----------------------------ī�彺ų-------------------
+    //----------------------------카드스킬-------------------
     public int SKIL2_power;
 
-
+    //카드 섞기 기능
     public List<T> GetShuffle<T>(List<T> _list)
     {
         for(int i = _list.Count - 1; i > 0; i--) {
@@ -82,7 +83,7 @@ public class CardDeque : MonoBehaviour
         }
         init_Deque();
     }
-
+    //덱 초기화
     void init_Deque()
     {
         for (int i = 0; i < 25; i++)
@@ -100,12 +101,13 @@ public class CardDeque : MonoBehaviour
         Draw_Card((int)Config.CARD_DRAW.INIT_DRAW);
         cardDeque_Visible.Deque_Update(m_Display_Deque);
     }
-
+    
     public void Deque_Arrange()
     {
         cardDeque_Visible.Deque_Update(m_Display_Deque);
     }
 
+    // 카드 드로우
     public void Draw_Card(int Card_cnt)
     {
         if(m_Ready_Deque.Count < Card_cnt)
@@ -127,6 +129,7 @@ public class CardDeque : MonoBehaviour
         }
     }
 
+    //턴시작 시 드로우 기능
     public void Set_Trun_Draw()
     {
         if(m_Display_Deque.Count == 7)
@@ -149,11 +152,12 @@ public class CardDeque : MonoBehaviour
         cardDeque_Visible.Deque_Update(m_Display_Deque);
     }
 
+    //카드 사용시 호출
     public void Use_Card(Card card)
     {
-        //ī�� ȿ�� �ߵ�
+        //카드 효과 발동
         card.click_card(true, true);
-        if (card.DPN10_flag == false)//DPN10 ���Ұ� ����
+        if (card.DPN10_flag == false)//DPN10 사용불가 조건
         {
             m_Used_Deque.Add(m_Display_Deque[card.CardIDX]);
             m_Display_Deque.RemoveAt((int)card.CardIDX);
@@ -180,7 +184,8 @@ public class CardDeque : MonoBehaviour
             }
         }
     }
-
+    
+    //카드 버리기
     public void Drop_Card(int index)
     {
         m_Used_Deque.Add(m_Display_Deque[index]);
@@ -195,7 +200,7 @@ public class CardDeque : MonoBehaviour
         m_Display_Deque.RemoveAt(last_card);
         cardDeque_Visible.Deque_Update(m_Display_Deque);
     }
-
+    // 모든 카드 버리기
     public void Drop_All_Card(int CardIDX)
     {
         int last_card = m_Display_Deque.Count;
@@ -210,16 +215,17 @@ public class CardDeque : MonoBehaviour
         cardDeque_Visible.Deque_Update(m_Display_Deque);
     }
 
+    // 카드에 의해 모든 주사위 값 변경
     public void ChangeAllDice()
     {
         diceDeque.Change_DiceVal(1);
     }
-
+    // 카드에 의해 주사위값 올리기
     public void NextDiceInc()
     {
         diceDeque.Change_DiceVal(1);
     }
-
+    // 카드에 의해 치기 주사위 값 
     public void NextDiceRed()
     {
         diceDeque.Change_DiceVal(-1);
