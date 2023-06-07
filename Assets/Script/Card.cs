@@ -26,7 +26,7 @@ public class Card : MonoBehaviour
     public int m_CardCode;
     private string Card_ment;
 
-    //---------------------------Æ¯¼ö±â¹Í-------------------
+    //---------------------------íŠ¹ìˆ˜ê¸°ë¯¹-------------------
     public bool DPN10_flag;
 
     private void Start()
@@ -36,7 +36,7 @@ public class Card : MonoBehaviour
         m_card = GameObject.FindGameObjectWithTag("CARD").GetComponent<CardDeque>();
         init_setting(0);
     }
-
+    //ì¹´ë“œ ì´ˆê¸°í™”
     public void init_setting(int card_Code)
     {
         isUsed = false;
@@ -47,7 +47,7 @@ public class Card : MonoBehaviour
         Card_ment = Config.Instance.CARD_TITLE[m_CardCode];
         TMP_CardMent.text = Config.Instance.CARD_TITLE[m_CardCode];
     }
-
+    // ì¹´ë“œ ì†ì„±ì‹œ ë°°ê²½ ì„¤ì •
     public void colorSetting()
     {
         if(0 <= m_CardCode && 9 >= m_CardCode)
@@ -63,7 +63,7 @@ public class Card : MonoBehaviour
             CardCaseImg.sprite = CardCase[2];
         }
     }
-
+    //ë§ˆìš°ìŠ¤ On ì‹œ ê³„ì‚°ê°’ ì—…ë°ì´íŠ¸
     public void click_card(bool is_click, bool is_realUse = false)
     {
         if (is_click)
@@ -82,7 +82,7 @@ public class Card : MonoBehaviour
             TMP_CardMent.text = Config.Instance.CARD_TITLE[m_CardCode];
         }
     }
-
+    //ì¹´ë“œ ìŠ¤í‚¬ ë¬¸êµ¬ 
     string card_ret(bool is_click, int dice, bool is_realUse = false)
     {
         string str = "";
@@ -293,7 +293,7 @@ public class Card : MonoBehaviour
         int dice2 = m_dice.Get_Dice(1);
         int dice3 = m_dice.Get_Dice(2);
         int ret = ((dice1 + dice2 + dice3) + m_card.SKIL2_power);
-        //ÁÖ»çÀ§ 3°³»ç¿ë
+        //ì£¼ì‚¬ìœ„ 3ê°œì‚¬ìš©
         if (read)
         {
             if (Attack)
@@ -379,7 +379,7 @@ public class Card : MonoBehaviour
     }
     string DPN2(bool read, int dice, bool Defense)
     {
-        //ÃßÈÄÁ¶Á¤
+        //ì¶”í›„ì¡°ì •
         if (read)
         {
             if (Defense)
@@ -482,7 +482,7 @@ public class Card : MonoBehaviour
     }
     string DPN8(bool read, int dice, bool Defense)
     {
-        //N Def, ¸¸¾à ¹æ¾î ÈÄ ¹æ¾îµµ°¡ ³²¾ÆÀÖÀ¸¸é ±× ¼öÄ¡ ±×´ë·Î °ø°İÀ¸·Î ÀüÈ¯ 
+        //N Def, ë§Œì•½ ë°©ì–´ í›„ ë°©ì–´ë„ê°€ ë‚¨ì•„ìˆìœ¼ë©´ ê·¸ ìˆ˜ì¹˜ ê·¸ëŒ€ë¡œ ê³µê²©ìœ¼ë¡œ ì „í™˜ 
         if (read)
         {
             if (Defense)
@@ -508,7 +508,7 @@ public class Card : MonoBehaviour
     }
     string DPN10(bool read, int dice, bool Defense)
     {
-        //70 Def, M=0ÀÏ¶§¸¸ »ç¿ë °¡´É, »ç¿ë ½Ã ¸ğµç ÆĞ¸¦ ¹ö¸² 
+        //70 Def, M=0ì¼ë•Œë§Œ ì‚¬ìš© ê°€ëŠ¥, ì‚¬ìš© ì‹œ ëª¨ë“  íŒ¨ë¥¼ ë²„ë¦¼ 
         if (read)
         {
             if (Defense)
