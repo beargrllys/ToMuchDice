@@ -26,8 +26,8 @@ public class Ally : MonoBehaviour
     public TMP_Text Shield_txt;
     public TMP_Text Dealing_txt;
 
-    //--------------------Æ¯¼ö »óÈ² º¯¼ö------------
-    public bool DPN8_flag; // ¹æ¾î ÈÄ ¹æ¾îµµ°¡ ³²¾ÆÀÖÀ¸¸é ±× ¼öÄ¡ ±×´ë·Î °ø°ÝÀ¸·Î ÀüÈ¯ 
+    //--------------------íŠ¹ìˆ˜ ìƒí™© ë³€ìˆ˜------------
+    public bool DPN8_flag; // ë°©ì–´ í›„ ë°©ì–´ë„ê°€ ë‚¨ì•„ìžˆìœ¼ë©´ ê·¸ ìˆ˜ì¹˜ ê·¸ëŒ€ë¡œ ê³µê²©ìœ¼ë¡œ ì „í™˜ 
 
     private void Start()
     {
@@ -67,13 +67,13 @@ public class Ally : MonoBehaviour
         }
         Update_Bar();
     }
-
+    // ì•„êµ° ë”œëŸ‰ ëˆ„ì ì‹œ í˜¸ì¶œ
     public void Accamulate_Deal(int deal)
     {
         ally_dealing += deal;
         Dealing_txt.text = ally_dealing.ToString();
     }
-
+    //ì•„êµ° ê³µê²© ìˆ˜í–‰ì‹œ í˜¸ì¶œ
     public void Take_Attack()
     {
         if (ally_dealing > 0)
@@ -89,7 +89,7 @@ public class Ally : MonoBehaviour
         Update_Bar();
     }
 
-
+    // ì•„êµ° ë°©ì–´ë ¥ íšë“ì‹œ í˜¸ì¶œ
     public void Get_Shield(int shd)
     {
         if (shd >= 0)
@@ -98,7 +98,8 @@ public class Ally : MonoBehaviour
             Update_Bar();
         }
     }
-
+    
+    //í„´ì‹œìž‘ì‹œ ì´ˆê¸°í™”
     public void Ready_Turn()
     {
         ally_dealing = 0;
@@ -106,6 +107,7 @@ public class Ally : MonoBehaviour
         Dealing_txt.text = ally_dealing.ToString();
     }
 
+    //ê°’ ë³€ê²½ì‹œ UIì—…ë°ì´íŠ¸
     public void Update_Bar()
     {
         if(now_Shield > 0)
@@ -126,6 +128,7 @@ public class Ally : MonoBehaviour
         Shield_txt.text = now_Shield.ToString();
     }
 
+    //í˜„ìž¬ ì‚¬ìš© ì¹´ë“œ ê°œìˆ˜ 
     public int Get_UsedCard_cnt()
     {
         return turnManager.Used_Card;
