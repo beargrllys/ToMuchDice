@@ -24,7 +24,7 @@ public class TurnManager : MonoBehaviour, IPointerClickHandler
 
     public GameObject ResultPanel;
     public TMP_Text SelectTxt;
-    string SelectStr = "���ο� ī�带 �����ϼ���.[{0}/3]";
+    string SelectStr = "새로운 카드를 선택하세요.[{0}/3]";
     public Image Result;
     public Image Back_btn;
     public Sprite[] win_lose = new Sprite[2];
@@ -75,15 +75,16 @@ public class TurnManager : MonoBehaviour, IPointerClickHandler
         }
         Turn_Txt.text = string.Format(info_str, Turn, Used_Card.ToString());
     }
-
+    // 전투 시작
     public void BattleStart()
     {
         m_ally.Take_Attack();
         m_enemy.Take_Attack();
     }
-
+    //전투끝
     public void BattleEnd(bool winORlose)
     {
+    //게임 종료 조건확인
         is_win = winORlose;
         if(BattleManage.Instance.battleTrun == 4)
         {
@@ -97,7 +98,7 @@ public class TurnManager : MonoBehaviour, IPointerClickHandler
         NewCardPanel.SetActive(true);
         set_newCard_select();
     }
-
+    //새 카드 선택 발동
     public void set_newCard_select()
     {
         SelectTxt.text = string.Format(SelectStr, new_select.Count + 1);
@@ -106,7 +107,7 @@ public class TurnManager : MonoBehaviour, IPointerClickHandler
             NewCardPrefab[i].SetCard();
         }
     }
-
+    //전투 결과 
     public void BattleResult()
     {
         if (is_win == true)
